@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+./scripts/rules-doc-generator.sh -p ./src/rules/ -o rules-doc.md -f md
+./scripts/rules-doc-generator.sh -p ./src/rules/ -o rules-doc.html -f html
+git add rules-doc.html rules-doc.md
