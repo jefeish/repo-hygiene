@@ -17,4 +17,4 @@ conditions:
 event:
   type: issuesCreateComment
   params:
-    comment: 2. comment
+    comment: message number 1

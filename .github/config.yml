@@ -1,14 +1,10 @@
 ---
 # Determine a Repo in your Org to provide 'client-side rules' (located under `.github/rules/`)
-
-# With `.`, the App will look for client-side rules in the Repo that triggerred the event 
-# This makes it a 'local' client-side rule. 
-# If you provide a specific Repo to store your rules, these Rules will apply
-# to any Repo that triggered an Event. 
-# This is similar to 'server-side rules', where the Rules are stored directly 
-# in the App and therefore applies to any incoming Repo event.
-# With the exception that the 'server-side rules' cannot be modified by users!
-
+# ------------------------------------------------------------
+# If server-side rules are provided, they will always be applied. 'server-side rules' cannot be modified by users!
+# `repo name`: The name of the Repo in your Org that contains the client-side rules
+# `.`: The App will look for client-side rules in the Repo that triggerred the event ('local' client-side rule)
+# `none`: No client-side rules will be applied, only 'server-side rules' will be applied
 # Options: `Repo name`, `.` or `none` 
 rules_repo: none
 

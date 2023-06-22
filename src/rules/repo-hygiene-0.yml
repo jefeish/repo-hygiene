@@ -1,0 +1,52 @@
+--- 
+name: Repo hygiene
+description: Check for repo hygiene, e.g. size, number of branches, etc.
+priority: 0
+
+conditions:
+  all:
+    - fact: payload.action
+      operator: equal
+      value: opened
+      description: incoming event was an 'opened'
+
+    - fact: name
+      operator: equal
+      value: pull_request
+      description: the source is a 'pull_request'
+
+    # Prevent loops
+    - fact: payload.sender.type
+      operator: notEqual
+      value: Bot
+event:
+  type: repositoryHygiene
+  params:
+    comment: A PR comment
+    checks:
+      - name: repo-size
+        description: Repo size
+        condition:
+          operator: greaterThan
+          value: 100
+        level: error
+        weight: 1
+        message: Repo size is too large
+      - name: repo-branches
+        description: Repo branches
+        condition:
+          operator: greaterThan
+          value: 10
+        level: warning
+        weight: 1
+        message: Repo has too many branches
+      - name: file-types
+        description: Repo file types
+        condition:
+          operator: doesNotContain
+          value: 
+            - .bin
+            - .exe
+        level: error
+        weight: 1
+        message: Commit contains binary files

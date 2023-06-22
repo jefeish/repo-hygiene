@@ -1,6 +1,6 @@
 ---
 # ----------------------------------------------------------------------------------------------------------------------
-# List of available Webhook events: https://developer.github.com/webooks/event-payloads
+# List of available Webhook events: https://docs.github.com/en/webhooks-and-events/webhooks/webhook-events-and-payloads
 # Content syntax:
 # <event_name>: [<handler>, <handler>, ...]
 #
@@ -37,7 +37,7 @@ pull_request.assigned: []
 pull_request.unassigned: []
 pull_request.labeled: []
 pull_request.unlabeled: []
-pull_request.opened: []
+pull_request.opened: [rulesEngineHandler]
 pull_request.edited: []
 pull_request.closed: []
 pull_request.reopened: []
