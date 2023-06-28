@@ -31,7 +31,7 @@ class repositoryHygiene extends Command {
    * @param {*} data 
    */
   async execute(context, params) {
-    context.log('pullrequestComment.execute()')
+    context.log('repositoryHygiene.execute()')
     let comment = params.comment
     const pr_sha = context.payload.pull_request.head.sha
 
@@ -64,35 +64,39 @@ class repositoryHygiene extends Command {
 
         // iterate over the list of checks
         checks.forEach(check => {
+          const m = new check()
+          context.log.info('Invoking check: ' + check + '(' + context + ',' + check.params + ')')
+          m.execute(context, check.params)
+        })
           context.log.debug('check name: ' + check.name)
-          switch (check.name) {
-            case 'repo-size':
-              context.log.debug('repo-size check')
-              result = check_repo_size(context, check)
-              break
-            case 'number-of-branches':
-              context.log.debug('number-of-branches check')
-              result = check_number_of_branches(context, check)
-              break
-            case 'file-types':
-              context.log.debug('file-types check')
-              result = check_file_types(context, check)
-              break
-            case 'large-files':
-              context.log.debug('large-files check')
-              result = check_large_files(context, check)
-              break
-            case 'number-of-dependabot-alerts':
-              context.log.debug('number-of-dependabot-alerts check')
-              result = check_number_of_dependabot_alerts(context, check)
-              break
-            case 'number-of-stale-branches':
-              context.log.debug('number-of-stale-branches check')
-              result = check_number_of_stale_branches(context, check)
-              break
-            default:
-              context.log.debug('unknown check')
-          }
+          // switch (check.name) {
+          //   case 'repo-size':
+          //     context.log.debug('repo-size check')
+          //     result = check_repo_size(context, check)
+          //     break
+          //   case 'number-of-branches':
+          //     context.log.debug('number-of-branches check')
+          //     result = check_number_of_branches(context, check)
+          //     break
+          //   case 'number-of-stale-branches':
+          //       context.log.debug('number-of-stale-branches check')
+          //       result = check_number_of_stale_branches(context, check)
+          //       break
+          //   case 'file-types':
+          //     context.log.debug('file-types check')
+          //     result = check_file_types(context, check)
+          //     break
+          //   case 'large-files':
+          //     context.log.debug('large-files check')
+          //     result = check_large_files(context, check)
+          //     break
+          //   case 'number-of-dependabot-alerts':
+          //     context.log.debug('number-of-dependabot-alerts check')
+          //     result = check_number_of_dependabot_alerts(context, check)
+          //     break
+          //   default:
+          //     context.log.debug('unknown check')
+          // }
         })
       }
 
