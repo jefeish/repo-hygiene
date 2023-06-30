@@ -9,8 +9,8 @@ const Command = require('../common/command.js')
 let instance = null
 
 
-class numberOfBranches extends Command {
-  
+class number_of_stale_branches extends Command {
+
   // eslint-disable-next-line no-useless-constructor
   constructor() {
     super()
@@ -21,8 +21,8 @@ class numberOfBranches extends Command {
    */
   static getInstance() {
     if (!instance) {
-      instance = new numberOfBranches()
-                 
+      instance = new number_of_stale_branches()
+
     }
 
     return instance
@@ -35,31 +35,19 @@ class numberOfBranches extends Command {
    * @param {*} data 
    */
   execute(context, data) {
-
+    context.log.info('number_of_stale_branches.execute()')
     try {
 
       if (typeof data == 'undefined') {
         data = 'NA'
       }
 
-      // THIS IS A SAMPLE GITHUB REST API CALL
-      // PLEASE PROVIDE YOUR OWN CODE HERE !
-      //
-      // FOR REFERENCE SEE: https://octokit.github.io/rest.js
-      //
-      // --------------------------------------
-
-      // const issue = context.issue(
-      //   {
-      //     owner: context.payload.repository.owner.login,
-      //     repo: context.payload.repository.name,
-      //     title: data[0],
-      //     body: data[1]
-      //   }
-      // )
-      //
-      // return context.github.issues.create(issue)
-      return 0
+      return {
+        name: 'number_of_stale_branches',
+        score: 5,
+        status: 'success',
+        summary: 'The number of stale branches are < 5',
+      }
     } catch (err) {
       context.log(err)
       return -1
@@ -67,5 +55,4 @@ class numberOfBranches extends Command {
   }
 }
 
-module.exports = numberOfBranches
-             
+module.exports = number_of_stale_branches

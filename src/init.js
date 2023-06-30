@@ -25,12 +25,12 @@ exports.registerEventHandlers = app => {
     Object.keys(events).forEach(event => {
       events[event].forEach(handler => {
         // instantiate the 'eventHandler' class
-        const Cmd = require(process.cwd() + '/src/eventHandlers/' + handler + '.js')
-        const action = Cmd.getInstance()
+        const cmd = require(process.cwd() + '/src/eventHandlers/' + handler + '.js')
+        const command = cmd.getInstance()
         // create a list of handler names for logging
         handlers.push(handler);
         // register the WebHook event and map it to an 'eventHandler' class
-        app.on(event, async (context, data) => action.execute(context, data))
+        app.on(event, async (context, data) => command.execute(context, data))
       })
 
       // create a map of event names to handler names

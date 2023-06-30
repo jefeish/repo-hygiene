@@ -1,7 +1,7 @@
 --- 
-name: Repo hygiene 0
+name: Repo hygiene 1
 description: Check for repo hygiene, e.g. size, number of branches, etc.
-priority: 0
+priority: 1
 
 conditions:
   all:
@@ -15,14 +15,17 @@ conditions:
       value: opened
       description: incoming event was an 'opened'
 
+    - fact: payload.pull_request.user.login
+      operator: equal
+      value: jefeish
+      description: creator was 'jefeish'
 event:
   type: repositoryHygiene
   params:
     reports: 
       - scorecard_markdown
-      
-    # the name of the rule should be unique across all rules
-    name: 1st_rule
+    
+    name: 2nd_rule
     
     checks:
       - name: repository_size
@@ -41,33 +44,4 @@ event:
           value: 10
         level: warning
         weight: 0.5
-        message: Repo has too many branches
-
-      - name: number_of_stale_branches
-        description: Repo stale branches
-        condition:
-          operator: greaterThan
-          value: 10
-        level: warning
-        weight: 1
-        message: Repo has too many branches
-
-      - name: number_of_open_pr
-        description: Repo open PRs
-        condition:
-          operator: greaterThan
-          value: 10
-        level: warning
-        weight: 1
-        message: Repo has too many branches
-
-      - name: blocked_files
-        description: prevent the PR merge of certain file-types
-        file_types:
-          - .exe
-          - .bin
-          - .tar
-          - .zip
-        level: warning
-        weight: 1
         message: Repo has too many branches
