@@ -23,7 +23,7 @@ Repo practices that maintain cleanliness, health, or optimal conditions.
 
 **Sample**
 
-```json
+```yaml
 checks:
   # Name of the compliance check (required)
   check: number_of_branches
@@ -41,7 +41,7 @@ This needs to be 'normalized' in order to create an overall score based report
 
 **Sample**
 
-```json
+```yaml
 check:
   name: number_of_branches
   score: 8
