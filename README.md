@@ -19,7 +19,7 @@ Repo practices that maintain cleanliness, health, or optimal conditions.
 ## Individual Checks
 ### Input format 
 
->Note: the input values/format are individual for each check and only require certain mandatory fileds.
+>Note: the input values/format are individual for each check and only require certain mandatory fields.
 
 **Sample**
 
