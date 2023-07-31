@@ -26,12 +26,12 @@ Repo practices that maintain cleanliness, health, or optimal conditions.
 ```yaml
 checks:
   # Name of the compliance check (required)
-  check: number_of_branches
+  - check: number_of_branches
 
-  # impact on overall results (required)
-  weight: 0.5
-
-  # custom fields ...
+    # impact on overall results (required)
+    weight: 0.5
+  
+    # custom fields ...
 
 ```
 
