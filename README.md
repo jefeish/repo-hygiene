@@ -1,5 +1,5 @@
 # Repo-Hygiene
-Repo practices that maintain cleanliness, health, or optimal conditions.
+Repository practices that maintain cleanliness, health, or optimal conditions.
 
 > An App based solution, if GitHub Actions are not an option.
 
@@ -32,6 +32,10 @@ checks:
     weight: 0.5
   
     # custom fields ...
+    params:
+      threshold: 20
+      severity: warning
+      message: Number of Branches exceeded
 
 ```
 
