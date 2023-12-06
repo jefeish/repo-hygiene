@@ -11,7 +11,7 @@ const favicon = require('serve-favicon');
 let path = require('path');
 const express = require('express')
 
-class policyUI {
+class appUI {
 
     // eslint-disable-next-line no-useless-constructor
     constructor(router, webPath) {
@@ -259,4 +259,4 @@ class policyUI {
     }
 }
 
-module.exports = policyUI
+module.exports = appUI

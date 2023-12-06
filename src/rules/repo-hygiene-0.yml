@@ -50,7 +50,7 @@ event:
           value: 10
         level: warning
         weight: 1
-        message: Repo has too many branches
+        message: Repo has too many stale branches
 
       - name: number_of_open_pr
         description: Repo open PRs
@@ -59,7 +59,7 @@ event:
           value: 10
         level: warning
         weight: 1
-        message: Repo has too many branches
+        message: Repo has too many open PRs
 
       - name: blocked_files
         description: prevent the PR merge of certain file-types
@@ -68,6 +68,15 @@ event:
           - .bin
           - .tar
           - .zip
+        level: warning
+        weight: 1
+        message: Repo contains blocked files
+
+      - name: required_files
+        description: prevent the PR merge if certain files are not present
+        file_types:
+          - CODEOWNERS
+          - README.md
         level: warning
         weight: 1
         message: Repo has too many branches

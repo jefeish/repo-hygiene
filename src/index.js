@@ -3,7 +3,7 @@
  * @param {import('probot').Application} app
  */
 const init = require('./init.js')
-const ui = require('./ui/policyUI.js')
+const ui = require('./ui/appUI.js')
 
 /**
  * This is the main entrypoint to your Probot app 
