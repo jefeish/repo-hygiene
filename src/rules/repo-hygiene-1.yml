@@ -7,18 +7,14 @@ conditions:
   all:
     - fact: name
       operator: equal
-      value: pull_request
-      description: the source is a 'pull_request'
+      value: issue
+      description: the source is an 'issue'
 
     - fact: payload.action
       operator: equal
       value: opened
       description: incoming event was an 'opened'
 
-    - fact: payload.pull_request.user.login
-      operator: equal
-      value: jefeish
-      description: creator was 'jefeish'
 event:
   type: repositoryHygiene
   params:

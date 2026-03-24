@@ -1,0 +1,27 @@
+.selected {
+  /* font-weight: bold; */
+  border-bottom: orangered 1px solid;
+  /* background-color: #f9f9f9; */
+  z-index: 1;
+}
+
+.tab-content {
+  padding-top: 30px;
+  ;
+  width: 66.67%;
+  margin: 0 auto;
+  flex: 1;
+}
+
+.tab-container {
+  display: flex;
+  flex-direction: row;
+  padding-right: 20px;
+  border-bottom: darkgray 1px solid;
+  z-index: 0;
+}
+
+.tab {
+  padding-right: 20px;
+  padding-left: 10px;
+}

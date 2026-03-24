@@ -1,4 +1,5 @@
 # Repo-Hygiene
+
 Repository practices that maintain cleanliness, health, or optimal conditions.
 
 > An App based solution, if GitHub Actions are not an option.
@@ -17,7 +18,8 @@ Repository practices that maintain cleanliness, health, or optimal conditions.
 ---
 
 ## Individual Checks
-### Input format 
+
+### Input format
 
 >Note: the input values/format are individual for each check and only require certain mandatory fields.
 

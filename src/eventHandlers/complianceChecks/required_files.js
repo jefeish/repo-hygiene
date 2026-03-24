@@ -27,6 +27,44 @@ class required_files extends Command {
     return instance
   }
 
+  /** 
+  * @description This function checks if the repository has the required files
+  * @param {*} context
+  * @param {*} files 
+  */
+  async checkForFiles(context, files) {
+    context.log.info("checkForFiles")
+    let jsonSectionReport = JSON.parse("{}")
+    let response
+    let compliant
+    jsonSectionReport.files = []
+
+    for (let i = 0; i < files.length; i++) {
+      let fileObject = JSON.parse("{}")
+
+      // Check if the file exists in the 'root' location
+      response = await checkContent(app, context, files[i])
+
+      if (response == 200) {
+        compliant = true
+      } else {
+        // Check if the file exists in the '.github' location
+        response = await checkContent(app, context, ".github/" + files[i])
+
+        if (response == 200) {
+          compliant = true
+        } else {
+          compliant = false
+        }
+      }
+      fileObject.name = files[i]
+      fileObject.compliant = compliant
+      jsonSectionReport.files[i] = fileObject
+    }
+    context.log.debug("checkForFiles: " + JSON.stringify(jsonSectionReport))
+    return jsonSectionReport
+  }
+
   /**
    * @description Main entry point for invocation from client
    * 

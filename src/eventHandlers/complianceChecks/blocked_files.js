@@ -1,8 +1,7 @@
 /**
- * @description Event Handler Class (TEMPLATE).
- * @param
- * PLEASE REPLACE ALL `change this!` MARKERS WITH YOUR OWN CODE 
- * (including this one)
+ * @description This class checks if the repository contains blocked files.
+ *              The list of blockes files is defined in the provided yaml data.
+ * 
  */
 
 const Command = require('../common/command.js')
@@ -27,6 +26,35 @@ class blocked_files extends Command {
     return instance
   }
 
+  /** 
+   * @description Generic function to check if a file exists at a location in 
+   *              the repository 
+   * @param {*} context
+   * @param {*} fileName 
+   * @returns status (200, 404 ...)
+   */
+  async checkContent(context, fileName) {
+    context.log.debug("checkContent: >" + fileName + "<")
+    let file
+
+    try {
+      file = await context.octokit.repos.getContent(
+        {
+          owner: context.payload.repository.owner.login,
+          repo: context.payload.repository.name,
+          path: fileName
+        }
+      );
+
+    } catch (err) {
+      context.log.error(err.status)
+      context.log.info("File not found: " + fileName)
+      return err.status
+    }
+
+    return file.status
+  }
+
   /**
    * @description Main entry point for invocation from client
    * 
@@ -41,6 +69,8 @@ class blocked_files extends Command {
       if (typeof data == 'undefined') {
         data = 'NA'
       }
+
+      const result = this.checkForFiles(context, data)
 
       return {
         name: 'blocked_files',

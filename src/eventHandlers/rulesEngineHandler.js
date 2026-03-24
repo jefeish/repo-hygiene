@@ -37,6 +37,7 @@ class rulesEngineHandler extends Command {
     this.engine = new Engine([], options)
     // Prepare the Rules-Engine
     this.loadCustomOperators()
+    console.log("invoke: getServerRules('')")
     this.getServerRules('')
     this.config = this.loadRulesEngineConfiguration()
   }
@@ -69,7 +70,7 @@ class rulesEngineHandler extends Command {
     catch (err) {
       console.error(err)
       console.error("\n Please provide a '.github/config.yml' file. Terminating!")
-      console.exit(1)
+      process.exit(1)
     }
   }
 
@@ -94,18 +95,27 @@ class rulesEngineHandler extends Command {
    * These operators support `Regular Expressions` or
    * `Date Time check` (in case something needs to 'expired') 
    ------------------------------------------------------------------------- */
-  loadCustomOperators() {
+   loadCustomOperators() {
 
     this.engine.addOperator('doesNotInclude', (factValue, jsonValue) => {
-      return !(factValue).includes(jsonValue)
+      // console.log('doesNotInclude - factValue: ' + factValue + ' jsonValue: ' + jsonValue)
+      if(typeof factValue !== 'undefined') {
+        return !(factValue).includes(jsonValue)
+      }
+      return false
     })
 
     this.engine.addOperator('includes', (factValue, jsonValue) => {
-      return (factValue).includes(jsonValue)
+      // console.log('includes - factValue: ' + factValue + ' jsonValue: ' + jsonValue)
+      if (typeof factValue !== 'undefined') {
+        return (factValue).includes(jsonValue)
+      }
+      return false
     })
 
     this.engine.addOperator('includesAny', (factValue, jsonValue) => {
-      if (factValue !== undefined) {
+      // console.log('includesAny - factValue: ' + factValue + ' jsonValue: ' + jsonValue)
+      if (typeof factValue !== 'undefined') {
         return (factValue).every(function () { (factValue).includes(jsonValue) })
       }
       else {
@@ -114,7 +124,8 @@ class rulesEngineHandler extends Command {
     })
 
     this.engine.addOperator('doesNotIncludeAny', (factValue, jsonValue) => {
-      if (factValue === undefined) {
+      // console.log('doesNotIncludeAny - factValue: ' + factValue + ' jsonValue: ' + jsonValue)
+      if (typeof factValue === 'undefined') {
         return true
       } else {
         return !(factValue).every(function () { (factValue).includes(jsonValue) })
@@ -122,20 +133,23 @@ class rulesEngineHandler extends Command {
     })
 
     this.engine.addOperator('regex', (factValue, jsonValue) => {
-      if (factValue === undefined) {
+      // console.log('regex - factValue: ' + factValue + ' jsonValue: ' + jsonValue)
+      if (typeof factValue === 'undefined') {
         return false
       }
       return (factValue).search(jsonValue) >= 0
     })
 
     this.engine.addOperator('isEmpty', (factValue, jsonValue) => {
-      if (factValue === undefined || factValue.length == 0) {
+      // console.log('isEmpty - factValue: ' + factValue + ' jsonValue: ' + jsonValue)
+      if (typeof factValue === 'undefined' || factValue.length == 0) {
         return true
       }
     })
 
     this.engine.addOperator('notEmpty', (factValue, jsonValue) => {
-      if (factValue !== undefined && factValue.length != 0) {
+      // console.log('notEmpty - factValue: ' + factValue + ' jsonValue: ' + jsonValue)
+      if (typeof factValue !== 'undefined' && factValue.length != 0) {
         return true
       }
     })
@@ -171,7 +185,9 @@ class rulesEngineHandler extends Command {
    * @param {*} prefix - Group Rules based on file name prefix
    ------------------------------------------------------------------------- */
   getServerRules(prefix) {
-    if (typeof prefix == 'undefined') {
+    console.log("getServerRules()")
+
+    if (typeof prefix === 'undefined') {
       prefix = ''
     }
 
@@ -181,6 +197,7 @@ class rulesEngineHandler extends Command {
       const files = fs.readdirSync(this.rulesPath)
       // Filter '.yml' files only
       files.filter(this.extension).forEach(rulesFile => {
+        console.log('rulesFile: ' + rulesFile)
 
         if (!prefix) { prefix = '' }
         if (rulesFile.startsWith(prefix)) {
@@ -193,7 +210,7 @@ class rulesEngineHandler extends Command {
           } else if (path.extname(rulesFile) === '.yml') {
             jsonRule = JSON.parse(JSON.stringify(yaml.safeLoad(ruleData), null, 4))
           }
-          // console.log('jsonRule: ' + util.inspect(jsonRule))
+          console.log('jsonRule: ' + util.inspect(jsonRule))
           this.engine.addRule(jsonRule)
         } else {
           console.log('Ignoring rules file(s), [' + rulesFile + ']')
@@ -276,7 +293,7 @@ class rulesEngineHandler extends Command {
         );
 
         const rule = new Rule(JSON.stringify(yaml.safeLoad(Buffer.from(ruleData.data.content, 'base64'))))
-
+        context.log.trace(rule)
         // Store the rules, so that we can remove them on Rules reload
         rulesList.push(rule)
 
@@ -367,22 +384,22 @@ class rulesEngineHandler extends Command {
    ------------------------------------------------------------------------- */
   async execute(context) {
     context.log.info('rulesEngineHandler.execute()')
-    context.log.trace('context: ' + util.inspect(context.log))
-
+    context.log.info('context: ' + util.inspect(context.log))
 
     // check if client-side rules need to be reloaded, if yes, do so
-    //  if (!rules_repo.match('^none$')) {
-    //   context.log.info('rules_repo: ' + rules_repo)
-    //   await this.getClientRules(context)
-    //  }
+    if (!rules_repo.match('^none$')) {
+      context.log.info('rules_repo: ' + rules_repo)
+      await this.getClientRules(context)
+    }
 
     const facts = await this.translateToRulesFacts(context)
+    // context.log.info('facts: ' + util.inspect(facts))
 
     if (context.log.level === 'trace') {
       // This section (if enabled) produces a data file with flattened facts that can be used in the UI Builder page
       for (const key in facts) {
         if (key.startsWith("payload") || key.startsWith("name")) {
-          context.log.trace('FACT: ' + key + ":" + util.inspect(facts[key]))
+          context.log.info('FACT: ' + key + ":" + util.inspect(facts[key]))
           fs.appendFile('src/ui/templates/facts.txt', key + '\n', function (err) {
             if (err) return context.log.error(err)
           });
@@ -390,27 +407,40 @@ class rulesEngineHandler extends Command {
       }
     }
     
-    let e
     const eventName = context.name + '.' + context.payload.action
     context.log.info('eventName: ' + eventName)
-    context.log.debug('context.payload.sender.type: ' + util.inspect(context.payload.sender.type))
+    context.log.info('context.payload.sender.type: ' + util.inspect(context.payload.sender.type))
 
     try {
       if (context.payload.sender.type != 'Bot') {
-        context.log.debug('SENDER IS NOT A BOT - CONTINUE !')
+        context.log.info('SENDER IS NOT A BOT - CONTINUE !')
         // Run the engine to evaluate the facts and conditions
-        this.engine
+        if (this.engine) {
+          console.log.info('Engine is running...')
+          this.engine
           .run(facts, { cache: false })
-          .then(results => {
+            .then(results => {
             results.events.map(event => {
-              const m = new handlerMap[event.type]()
-              context.log.info('Routing to rulesHandler: ' + event.type + '(' + context + ',' + event.params + ')')
-              m.execute(context, event.params)
+              context.log.info('event: ' + util.inspect(event))
+              context.log.info('event.params: ' + util.inspect(event.params))
+              context.log.info('event.params.handlers[0]: ' + util.inspect(event.params.handlers[0]))
+              event.params.handlers.forEach(handler => {
+                context.log.info('Routing to handler class: ' + handler.name + '(' + context + ',' + handler.params + ')')
+                // the 'handlerMap' contains all the 'eventHandler' classes
+                const m = new handlerMap[handler.name]()
+                m.execute(context, handler.data)
+              })
             })
           })
           .catch(function (err) {
-            console.log('error: ', err)
+            context.log.error(err)
+            if (err.name === 'TypeError' && err.message.includes('handlerMap[event.type] is not a constructor')) {
+              context.log.error("Hint: The policy 'event.type:' must contain a valid event handler class name, please check the handler-class name.")
+            }
           })
+        } else {
+          console.log('Engine is not initialized or run is not a function');
+        }
       }
       else {
         context.log.debug('SENDER IS A BOT - SKIP !')
