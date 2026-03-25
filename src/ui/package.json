@@ -1,7 +1,7 @@
 {
   "name": "ui",
   "version": "0.1.0",
-  "homepage": "healthCheck",
+  "homepage": "repo-hygiene",
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",

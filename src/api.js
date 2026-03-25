@@ -5,6 +5,7 @@
  */
 
 const fs = require('fs')
+const path = require('path')
 const yaml = require('js-yaml')
 const util = require('util')
 
@@ -17,7 +18,7 @@ const util = require('util')
  * 
  */
 exports.healthChecks = () => {
-  const modulesPath = 'src/healthChecks/'
+  const modulesPath = path.join(__dirname, 'eventHandlers', 'complianceChecks')
   // An array to store the names of the health check files
   let healthCheckFiles = []
   // An array to store the names of the health check files + description
@@ -58,7 +59,7 @@ exports.healthChecks = () => {
     })
 
   } catch (err) {
-    console.log.error(err)
+    console.error(err)
   }
 
   console.log('readHealthCheckModules - complete')
