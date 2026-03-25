@@ -42,6 +42,19 @@ class number_of_branches extends Command {
         data = 'NA'
       }
 
+      // List all branches of a repository
+      result = await context.octokit.request('GET /repos/:owner/:repo/branches', {
+        owner: 'owner_username',
+        repo: 'repository_name'
+      })
+        .then(response => {
+          const openBranches = response.data.filter(branch => branch.protected === false);
+          console.log(openBranches.map(branch => branch.name));
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+
       return {
         name: 'number_of_branches',
         score: 8,

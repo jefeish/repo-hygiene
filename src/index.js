@@ -14,6 +14,7 @@ module.exports = (app, { getRouter }) => {
   app.log('Starting the Repo Hygiene - App!')
   init.registerEventHandlers(app)
   
-  webUI = new ui(getRouter('/repo-hygiene'))
+  // initialize the web UI
+  const webUI = new ui(app, getRouter('/repo-hygiene'), null)
   webUI.start()
 }

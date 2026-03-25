@@ -9,19 +9,26 @@ const yaml = require('js-yaml')
 const path_module = require('path');
 
 /**
+ * @description This function reads the eventHandlers.yml file and registers the event handlers
+ *              with the app. EventHandlers are classes that execute a specific action when a
+ *              GitHub WebHook event is triggered.
+ *              The eventHandlers.yml file is a map of GitHub WebHook events
+ *              to 'eventHandler' classes. 
  * 
- * Implement a simple 'command pattern'
  * | @param app
  */
 exports.registerEventHandlers = app => {
   app.log('registerEventHandlers')
 
   try {
+    // read the eventHandlers.yml file
     const fileContents = fs.readFileSync('./src/eventHandlers.yml', 'utf8')
     const events = yaml.safeLoad(fileContents)
     let handlers = []
     let eventRegistry = {}
 
+    // iterate through the eventHandlers.yml file and register the event handlers.
+    // For each WebHook event, map the event to an 'eventHandler' class
     Object.keys(events).forEach(event => {
       events[event].forEach(handler => {
         // instantiate the 'eventHandler' class
@@ -43,7 +50,7 @@ exports.registerEventHandlers = app => {
     // write the event registry to the log
     if (eventRegistry) {
       Object.keys(eventRegistry).forEach(event => {
-        app.log.info( event +', '+ JSON.stringify(eventRegistry[`${event}`])
+        app.log.debug( "Registered "+ event +', '+ JSON.stringify(eventRegistry[`${event}`])
       )})
     }
   } catch (handler) {

@@ -1,5 +1,7 @@
-/**
- * @description Event Handler Class to check for repository hygiene
+/**E
+ * @description This Class is the main entry point for the repository hygiene process.
+ *              It is responsible for invoking the various checks and reports that are
+ *              defined in the configuration file.
  * @param
  *  body: data
  */
